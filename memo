@@ -1,0 +1,252 @@
+use serde::{Serialize, Deserialize};
+// #[macro_use] extern crate serde;
+use rocket::Outcome;
+use rocket::Outcome::*;
+use rocket::request::{self, Request, FromRequest};
+use rocket::http::{Status, ContentType};
+use rocket::Data;
+use rocket::data::{self, FromData, Transform, FromDataSimple};
+
+use std::io::{self, Read};
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Body {
+   pub data: String
+}
+
+impl Body {
+    pub fn get_data(&self) -> String {
+        self.data.clone()
+    }
+}
+
+const NAME_LIMIT:u64 = 256;
+enum NameError {
+    Io(io::Error),
+    Parse
+}
+impl FromData<'_> for Body {
+    type Error = String;
+    type Owned = String;
+    type Borrowed = str;
+    
+    fn from_data(_: &Request, data: Data) -> data::Outcome<Self, String> {
+        let mut string = String::new();
+        if let Err(e) = data.open().read_to_string(&mut string) {
+            return Failure((Status::InternalServerError, format!("{:?}", e)));
+        }
+
+        Success(Body{ data: string })
+    }
+
+    fn transform(_: &Request, data: Data) -> Transform<Outcome<Self::Owned, Self::Error>> {
+        let mut stream = data.open().take(NAME_LIMIT);
+        let mut string = String::with_capacity((NAME_LIMIT / 2) as usize);
+        let outcome = match stream.read_to_string(&mut string) {
+            Ok(_) => Success(string),
+            Err(e) => Failure((Status::InternalServerError, NameError::Io(e)))
+        };
+
+        // Returning `Borrowed` here means we get `Borrowed` in `from_data`.
+        Transform::Borrowed(outcome)
+    }
+}
+
+fn print_typename<T>(_: T) {
+    println!("{}", std::any::type_name::<T>());
+}
+
+// fn main() {
+//     let a = 42;
+//     print_typename(a);
+//     let b = |x: i32| { x * 2 };
+//     print_typename(b);
+//     let c = (1..10).skip(2);
+//     print_typename(c);
+// }
+
+
+pub struct Signature {
+    pub key: String,
+}
+
+impl<'a, 'r> FromRequest<'a, 'r> for Signature {
+    type Error = ();
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<Signature, ()> {
+        let keys: Vec<_> = request.headers().get("X-Line-Signature").collect();
+        if keys.len() != 1 {
+            return Outcome::Failure((Status::BadRequest, ()));
+        }
+
+        Outcome::Success(
+            Signature { key: keys[0].to_string() }
+        )
+    }
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+// pub struct Body {
+//     pub name: String,
+//     pub age: u16,
+// }
+
+// // Always use a limit to prevent DoS attacks.
+// const LIMIT: u64 = 256;
+
+// impl FromDataSimple for Body {
+//     type Error = String;
+
+//     fn from_data(req: &Request, data: Data) -> data::Outcome<Self, String> {
+//         // Ensure the content type is correct before opening the data.
+//         println!("ensure the content type");
+//         let person_ct = ContentType::new("application", "json");
+//         if req.content_type() != Some(&person_ct) {
+//             return Outcome::Forward(data);
+//         }
+//         println!("read the data into a string");
+//         // Read the data into a String.
+//         let mut string = String::new();
+//         if let Err(e) = data.open().take(LIMIT).read_to_string(&mut string) {
+//             return Failure((Status::InternalServerError, format!("{:?}", e)));
+//         }
+//         println!("string:{}",string );
+//         println!("split the string into two pieces at");
+//         // Split the string into two pieces at ':'.
+//         let (name, age) = match string.find(':') {
+//             Some(i) => (string[..i].to_string(), &string[(i + 1)..]),
+//             None => return Failure((Status::UnprocessableEntity, "':'".into()))
+//         };
+//         println!("success, name:{}", name);
+//         println!("success, age:{}", age);
+//         println!("parse the age");
+//         // Parse the age.
+//         let age: u16 = match age.parse() {
+//             Ok(age) => age,
+//             Err(_) => return Failure((Status::UnprocessableEntity, "Age".into()))
+//         };
+
+//         // Return successfully.
+//         Success(Body { name, age })
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #![feature(proc_macro_hygiene, decl_macro)]
+
+// extern crate serde_json;
+// #[macro_use] extern crate rocket;
+// #[macro_use] extern crate ureq;
+
+mod models;
+mod public_holiday;
+use public_holiday::*;
+
+// // use reqwest::Body;
+// // use std::collections::BTreeMap;
+// // use rocket_contrib::json::Json;
+
+
+// // use std::io::Read;
+
+use models::{Signature, Body};
+
+// #[post("/callback", data = "<body>")]
+// #[post("/callback", format = "application/json")]
+#[post("/callback", format = "application/json", data = "<body>")]
+fn webhook ( signature: Signature, body: Body) -> &'static str {
+// fn webhook ( bd: String) -> &'static str {       // if you want to render request body, acitvate this line
+    const BASE_URL: &str = "https://api.line.me/v2/bot/message/reply";
+
+    println!("web hook has sent");
+    println!("=======================================================");
+    println!("body: {}", body.name);
+    println!("signature: {}",signature.key );
+    println!("=======================================================");
+    println!("send http request");
+    // send http request
+    // let s = ureq::get("http://127.0.0.1:8000/").call().into_string().unwrap();
+    // println!("req {}", s);
+    println!("=======================================================");
+
+    "bbbbb"
+
+}
+
+#[get("/")]
+fn index() -> &'static str {
+    println!("hellooooooooooooooooooo" );
+    "hello world"
+}
+
+fn main() {
+    use chrono::{Datelike};
+    // use chrono::naive::NaiveDate;
+    use chrono::{Local};
+    // rocket::ignite().mount("/", routes![webhook])
+                    // .mount("/", routes![index])
+                    // .launch();
+    let a = Local::today().naive_local().day();
+    println!("{}", a);
+    let b = new_years_day();
+    println!("{}({})",b, b.weekday());
+    let c = adult_day();
+    println!("{}({})",c , c .weekday());
+    let d = vernal_equinox_day();
+    println!("{}({})",d , d.weekday());
+    let e = autumn_equinox_day();
+    println!("{}({})",e , e.weekday());
+}
+
+
+
+
+
+[package]
+name = "bot"
+version = "0.1.0"
+authors = ["hota822 <hota822@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket = "0.4.5"
+# rocket_contrib = { version = "0.4.2", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+# serde_derive = "1.0"
+# serde_json = "1.0"
+# reqwest = "0.10.1"
+# ureq = { version = "*", features = ["json"] }
+
+chrono = "0.4"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+VERSION=nightly
+web: ROCKET_PORT=$PORT ./target/release/bot
