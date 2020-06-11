@@ -903,6 +903,7 @@ dependencies = [
 [[package]]
 name = "line-messaging-api-rust"
 version = "0.1.2"
+source = "git+https://github.com/hota822/line-messaging-api-rust.git#b1f81ea85fc3bf555bc03c2f0c1f212f06a790fc"
 dependencies = [
  "base64 0.12.1",
  "bytes 0.5.4",

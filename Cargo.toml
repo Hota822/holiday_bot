@@ -17,8 +17,8 @@ diesel = { version = "1.4.4", features = ["sqlite", "r2d2"] }
 dotenv = "0.15.0"
 
 # どっちか使う
-# line-messaging-api-rust = { git = "https://github.com/hota822/line-messaging-api-rust.git" }
-line-messaging-api-rust = { path = "../line-messaging-api-rust" }
+line-messaging-api-rust = { git = "https://github.com/hota822/line-messaging-api-rust.git" }
+# line-messaging-api-rust = { path = "../line-messaging-api-rust" }
 
 
 
