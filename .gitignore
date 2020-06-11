@@ -1,2 +1,4 @@
 /target
 /bot
+rls*
+*.env
