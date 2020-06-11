@@ -1,7 +1,12 @@
+use crate::line::{bot, utils, messages, events};
 use crate::models::*;
 use crate::public_holidays::*;
-// use line_messaging_api_rust;
-// use line_messaging_api_rocket;
+use serde_json::value::Value;
+use std::env;
+
+// const BASE_URL: &str = "https://api.line.me/v2/bot/message/reply";
+const CHANNEL_SECRET: &str = "CHANNEL_SECRET";
+const CHANNEL_ACCESS_TOKEN: &str = "CHANNEL_ACCESS_TOKEN";
 
 #[get("/")]
 pub fn index() -> &'static str {
@@ -9,21 +14,26 @@ pub fn index() -> &'static str {
 }
 
 #[post("/callback", format = "application/json", data = "<body>")]
-pub fn webhook(signature: Signature, body: Body) -> &'static str {
-// fn webhook ( bd: String) -> &'static str {       // if you want to render request body, acitvate this line
-    const BASE_URL: &str = "https://api.line.me/v2/bot/message/reply";
-
-    println!("web hook has sent");
-    println!("=======================================================");
+pub fn webhook(signature: Signature, body: Body) -> Result<(), env::VarError> {
+    // println!("web hook has sent");
     // println!("body: {}", body.name);
     // println!("signature: {}",signature.key );
-    println!("=======================================================");
-    println!("send http request");
-    // send http request
-    // let s = ureq::get("http://127.0.0.1:8000/").call().into_string().unwrap();
-    // println!("req {}", s);
-    println!("=======================================================");
+    // println!("=======================================================");
+    let secret = env::var(CHANNEL_SECRET)?;
+    let token = env::var(CHANNEL_ACCESS_TOKEN)?;
+    let bot = bot::LineBot::new(&secret, &token);
 
-    "bbbbb"
-
+    if bot.check_signature(&body.data, &signature.key)
+        && utils::is_replyable(&body.get_data())
+    {
+        let data: &str = &body.get_data();
+        let receive_event: Value = serde_json::from_str(data).unwrap();
+        let event: events::ReplyableEvent = utils::to_events(&body.get_data()).unwrap();
+        if receive_event["events"][0]["message"]["type"] == "text"{
+            let receive_text: &str = &receive_event["events"][0]["message"]["text"].as_str().unwrap();
+            let message = messages::LineMessage::create_text("", receive_text);
+            event.reply(vec![message], bot);
+        }
+    }
+    Ok(())
 }
