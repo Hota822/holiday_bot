@@ -4,6 +4,8 @@ use crate::public_holidays::*;
 use serde_json::value::Value;
 use std::env;
 
+pub const U: chrono::NaiveDate = chrono::naive::MIN_DATE;
+
 // const BASE_URL: &str = "https://api.line.me/v2/bot/message/reply";
 const CHANNEL_SECRET: &str = "CHANNEL_SECRET";
 const CHANNEL_ACCESS_TOKEN: &str = "CHANNEL_ACCESS_TOKEN";

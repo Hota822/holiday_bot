@@ -17,7 +17,7 @@ log = "0.4"
 # dotenv = "0.15.0"
 
 # どっちか使う
-line-messaging-api-rust = { git = "https://github.com/hota822/line-messaging-api-rust.git" }
+line-messaging-api-rust = { git = "https://github.com/hota822/line-messaging-api-rust.git", version = "0.1.3" }
 # line-messaging-api-rust = { path = "../line-messaging-api-rust" }
 
 
