@@ -64,3 +64,9 @@ impl FromDataSimple for Body {
 //         Ok(LineBot::new(&secret, &token))
 //     }
 // }
+
+
+// #[derive(Err)];
+pub enum SignatureErr {
+    MISMATCH_SECRET,
+}

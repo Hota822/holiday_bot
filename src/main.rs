@@ -3,9 +3,11 @@
 pub use line_messaging_api_rust as line;
 pub use serde_json;
 
+mod controllers;
 mod models;
 mod public_holidays;
 mod routes;
+
 
 use routes::*;
 
