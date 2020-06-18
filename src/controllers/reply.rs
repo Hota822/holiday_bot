@@ -1,12 +1,7 @@
 use serde_json::value::Value;
 use crate::line::{bot, utils, messages, events};
 use crate::models::*;
-
-// use std::error::Error;
-use std::env;
-
-const CHANNEL_SECRET: &str = "CHANNEL_SECRET";
-const CHANNEL_ACCESS_TOKEN: &str = "CHANNEL_ACCESS_TOKEN";
+use super::get_secret_data;
 
 pub fn construct(
     signature: Signature,
@@ -24,12 +19,6 @@ pub fn construct(
     Ok(())
 }
 
-fn get_secret_data() -> Result<(String, String), env::VarError> {
-    let secret = env::var(CHANNEL_SECRET)?;
-    let token = env::var(CHANNEL_ACCESS_TOKEN)?;
-    Ok((secret, token))
-}
-
 pub fn reply(body: Body, bot: bot::LineBot) {
     let data: &str = &body.get_data();
     let event: events::ReplyableEvent = utils::to_events(data).unwrap();
@@ -43,16 +32,31 @@ pub fn reply(body: Body, bot: bot::LineBot) {
     event.reply(vec![message], bot);
 }
 
-
-
-fn create_msg_for_text(data: Value) -> messages::LineMessage {
+fn create_msg_for_text(_data: Value) -> messages::LineMessage {
+    // オウム返し
     // let text = &data["events"][0]["message"]["text"].as_str().unwrap();
     // let message = messages::LineMessage::create_text("",text);
-    let message = messages::LineMessage::create_text("", "お前のことはおぼえたぞ");
-    message
+
+    if true {
+    // if db.new_user {
+        // db.add_user_id
+        messages::LineMessage::create_text("", "お前のことはおぼえたぞ")
+    } else {
+        let next_holiday = "sample"; // db.holiday.first.get();
+        let mut message = "next holiday is ".to_string();
+        message.push_str(next_holiday);
+        if true {
+        // if let Some(day) db.personal_holiday.get() {
+            let day = "sample day"; // if implemented this scope, delete this line
+            message.push_str("\nnext your special day is ");
+            message.push_str(&day);
+            return messages::LineMessage::create_text("", &message)
+        }
+        messages::LineMessage::create_text("", &message)
+    }
 }
 
-fn not_supported(data: Value) -> messages::LineMessage {
-    let message = messages::LineMessage::create_text("", "お前のことはおぼえたぞ");
+fn not_supported(_data: Value) -> messages::LineMessage {
+    let message = messages::LineMessage::create_text("", "未対応");
     message
 }
