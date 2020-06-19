@@ -45,6 +45,24 @@ impl<'a, 'r> FromRequest<'a, 'r> for HeaderTest {
     }
 }
 
+#[derive(Debug)]
+pub struct BodyTest {
+    data: String,
+}
+
+impl FromDataSimple for BodyTest {
+    type Error = String;
+
+    fn from_data(_: &Request, data: Data) -> data::Outcome<Self, String> {
+        let mut string = String::new();
+        if let Err(e) = data.open().read_to_string(&mut string) {
+            return Failure((Status::InternalServerError, format!("{:?}", e)));
+        }
+
+        Success(BodyTest{ data: string })
+    }
+}
+
 
 
 
