@@ -27,6 +27,25 @@ impl<'a, 'r> FromRequest<'a, 'r> for Signature {
     }
 }
 
+#[derive(Debug)]
+pub struct HeaderTest {
+    header: Vec<String>,
+}
+
+impl<'a, 'r> FromRequest<'a, 'r> for HeaderTest {
+    type Error = ();
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<HeaderTest, ()> {
+        let mut vector: Vec<String> = Vec::new();
+        for v in request.headers().iter() {
+            vector.push(v.to_string());
+        };
+        Outcome::Success(
+            HeaderTest { header: vector }
+        )
+    }
+}
+
+
 
 
 #[derive(Debug)]

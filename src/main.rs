@@ -17,6 +17,7 @@ fn main() {
     rocket::ignite().mount("/", routes![index])
                     .mount("/", routes![webhook])
                     .mount("/", routes![cron])
+                    .mount("/", routes![test])
                     .launch();
 }
 

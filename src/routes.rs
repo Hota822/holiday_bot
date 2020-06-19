@@ -24,3 +24,13 @@ pub fn cron(signature: Signature, body: Body) -> &'static str {
     println!("everyday received request.");
     "aaaaaaaaaaaaaaaa"
 }
+
+#[post("/test", format = "application/json", data = "<body>")]
+pub fn test(header: HeaderTest, body: String)  {
+    println!("Request header is:");
+    println!("{:?}", header);
+    println!();
+    println!("Request body is:");
+    println!("{}", body);
+    println!();
+}
