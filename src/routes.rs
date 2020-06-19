@@ -17,8 +17,8 @@ pub fn webhook(signature: Signature, body: Body) -> Result<(), &'static str> {
     controllers::reply::construct(signature, body, function)
 }
 
-#[post("/everyday", format = "application/json", data = "<body>")]
 // pub fn cron(signature: Signature, body: Body) -> Result<(), &'static str> {
+#[post("/everyday", format = "application/json", data = "<body>")]
 pub fn cron(signature: Signature, body: Body) -> &'static str {
     // controllers::push::construct(signature, body)
     println!("everyday received request.");
