@@ -65,8 +65,16 @@ impl FromDataSimple for Body {
 //     }
 // }
 
+pub struct Holiday {
+    pub name: &'static str,
+    pub day: &'static str,
+}
 
-// #[derive(Err)];
-pub enum SignatureErr {
-    MISMATCH_SECRET,
+impl Holiday {
+    pub fn new(name: &'static str, day: &'static str) -> Self {
+        Self {
+            name,
+            day
+        }
+    }
 }

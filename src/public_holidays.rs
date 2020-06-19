@@ -36,17 +36,17 @@ pub fn showa_day() -> NaiveDate{
 }
 
 // 憲法記念日 5月3日
-pub fn constitution_day()-> NaiveDate {
+pub fn constitution_day() -> NaiveDate {
     constant_day(5, 3)
 }
 
 // みどりの日 5月4日
-pub fn green_day()-> NaiveDate {
+pub fn green_day() -> NaiveDate {
     constant_day(5, 4)
 }
 
 // こどもの日 5月5日
-pub fn childrens_day()-> NaiveDate {
+pub fn childrens_day() -> NaiveDate {
     constant_day(5, 5)
 }
 
@@ -71,7 +71,7 @@ pub fn autumn_equinox_day() -> NaiveDate{
 }
 
 // スポーツの日	10月の第2月曜日
-pub fn sports_day()-> NaiveDate {
+pub fn sports_day() -> NaiveDate {
     constant_monday(10, 15)
 }
 
