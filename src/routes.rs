@@ -26,11 +26,11 @@ pub fn cron(signature: Signature, body: Body) -> &'static str {
 }
 
 #[post("/test", format = "application/json", data = "<body>")]
-pub fn test(header: HeaderTest, body: String)  {
+pub fn test(header: HeaderTest, body: BodyTest)  {
     println!("Request header is:");
     println!("{:?}", header);
     println!();
     println!("Request body is:");
-    println!("{}", body);
+    println!("{:?}", body);
     println!();
-}   
+}
