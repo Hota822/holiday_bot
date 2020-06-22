@@ -19,10 +19,10 @@ pub fn webhook(signature: Signature, body: Body) -> Result<(), &'static str> {
 
 // pub fn cron(signature: Signature, body: Body) -> Result<(), &'static str> {
 #[post("/everyday", format = "application/json", data = "<body>")]
-pub fn cron(signature: Signature, body: Body) -> &'static str {
-    // controllers::push::construct(signature, body)
-    println!("everyday received request.");
-    "aaaaaaaaaaaaaaaa"
+pub fn cron(signature: Secret, body: Body) -> &'static str {
+    // println!("everyday received request.");
+    controllers::push::construct(signature, body);
+    "Push success!"
 }
 
 #[post("/test", format = "application/json", data = "<body>")]

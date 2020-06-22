@@ -27,6 +27,24 @@ impl<'a, 'r> FromRequest<'a, 'r> for Signature {
     }
 }
 
+pub struct Secret {
+    pub key: String,
+}
+
+impl<'a, 'r> FromRequest<'a, 'r> for Secret {
+    type Error = ();
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<Secret, ()> {
+        let keys: Vec<_> = request.headers().get("secret").collect();
+        if keys.len() != 1 {
+            return Outcome::Failure((Status::BadRequest, ()));
+        }
+
+        Outcome::Success(
+            Secret { key: keys[0].to_string() }
+        )
+    }
+}
+
 #[derive(Debug)]
 pub struct HeaderTest {
     header: Vec<String>,

@@ -8,12 +8,14 @@ use crate::utils::holiday as date;
 
 use super::get_secret_data;
 
+const SECRET: &str = "hota822ss";
 
-pub fn construct(signature: Signature, body: Body) -> Result<(), &'static str>{
-    let (secret, _) = match get_secret_data() {
-        Ok((secret, token)) => (secret, token),
-        Err(_) => return Err("Failure"),
-    };
+pub fn construct(signature: Secret, body: Body) -> Result<(), &'static str>{
+    // let (secret, _) = match get_secret_data() {
+    //     Ok((secret, token)) => (secret, token),
+    //     Err(_) => return Err("Failure"),
+    // };
+    let secret = std::env::var(SECRET).unwrap();
     if secret != signature.key { return Err("Failure") };
     push();
     Ok(())
