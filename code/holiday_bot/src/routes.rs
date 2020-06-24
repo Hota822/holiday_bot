@@ -9,7 +9,7 @@ use crate::models::*;
 
 #[get("/")]
 pub fn index() -> &'static str {
-    "Hello"
+    "Hello holiday!\n"
 }
 #[post("/callback", format = "application/json", data = "<body>")]
 pub fn webhook(signature: Signature, body: Body) -> Result<(), &'static str> {

@@ -2,4 +2,3 @@
 /bot
 rls*
 *.env
-db/*
