@@ -8,9 +8,11 @@ services:
       - 8000:8000
     volumes:
       - ./code/holiday_bot:/opt/holiday_bot
+      - not_delete:/tmp
     working_dir: /opt/holiday_bot
-    command: cargo run
-    # command: /bin/sh -c "while sleep 1000; do :; done"
+    # command: cargo run
+    # to use rls in container, enable following line instead of above.
+    command: /bin/sh -c "while sleep 1000; do :; done"
   #======================================================================  nginx  ======
   nginx:
     build:
@@ -23,21 +25,25 @@ services:
       # - ./nginx/conf:/etc/nginx/conf.d
       # - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
       - ./static:/static
+      - not_delete:/tmp
     depends_on:
       - rust
   #======================================================================  mysql  ======
   mysql:
     image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    # build: ./mysql
+    # command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
      - 3306:3306
     volumes:
        - ./db:/var/lib/mysql
        - ./mysql/init:/docker-entrypoint-initdb.d
+       - ./mysql/conf:/etc/mysql/conf.d
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=holiday_bot
-      - MYSQL_USER=root
+      - MYSQL_USER=rocket
       - MYSQL_PASSWORD=password
-    hostname: db
+volumes:
+  not_delete:
