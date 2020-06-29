@@ -677,7 +677,6 @@ dependencies = [
  "chrono",
  "diesel",
  "line-messaging-api-rust",
- "log 0.4.8",
  "rocket",
  "rocket_contrib",
  "serde",

@@ -11,7 +11,7 @@ services:
       - not_delete:/tmp
     working_dir: /opt/holiday_bot
     # command: cargo run
-    # to use rls in container, enable following line instead of above.
+    # to use rls in container, enable following line instead dcof above.
     command: /bin/sh -c "while sleep 1000; do :; done"
   #======================================================================  nginx  ======
   nginx:
