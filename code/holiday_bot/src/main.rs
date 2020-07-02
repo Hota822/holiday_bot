@@ -24,11 +24,16 @@ use routes::*;
 pub struct DBConnection(diesel::MysqlConnection);
 
 fn main() {
-    rocket::ignite().mount("/", routes![index])
-                    .mount("/", routes![webhook])
-                    .mount("/", routes![cron])
-                    .mount("/", routes![test])
-                    .attach(DBConnection::fairing())
-                    .launch();
+    rocket::ignite()
+        .mount("/", routes![
+            index,
+            webhook,
+            cron,
+            test,
+            create_page_view,
+            list_page_views,
+        ])
+        .attach(DBConnection::fairing())
+        .launch();
 }
 

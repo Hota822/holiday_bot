@@ -59,4 +59,5 @@ Error: Database configuration failure: 'holiday_bot'
     => Error: A table named `databases` was not found for this configuration  
 Error: Rocket failed to launch due to failing fairings:  
 ```
-check table correctly named by your code.
+It occurs when no [global.databases] section in Rocket.toml  
+
