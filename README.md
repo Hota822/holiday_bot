@@ -34,5 +34,29 @@ execute command in mysql container and after logged in.
 
 
 # Others
-* if rls is down with message: "thread '<unnamed>' panicked at 'unexpected error reading save-analysis directory: Os { code: 22, kind: InvalidInput, message: "Invalid argument" }'", maybe fixable use "docker-compose reload" command
 
+### using rls
+* if rls is down with message: "thread '<unnamed>' panicked at 'unexpected error reading save-analysis directory:  
+ Os { code: 22, kind: InvalidInput, message: "Invalid argument" }'", maybe fixable use "docker-compose reload" command
+* many times panic rls, use wsl and docker at the same times like below
+1. enable wsl
+2. git clone this in wsl
+3. create symbolic link form here at workspace (maybe required)
+4. create docker container
+5. edit source by remote wsl access
+6. when change source code, recompile in docker container  
+(in wsl1, compile will be failure because install diesel-cli will be failure )
+* error occurred in Cargo.toml with "could not compile rocket_codegen", but could compile.  
+  temporary comment out all of dependencies, and then follow rls instructions and put it back.
+
+
+### trouble shooting
+
+
+* when cargo run, but failed with following messages
+```
+Error: Database configuration failure: 'holiday_bot'  
+    => Error: A table named `databases` was not found for this configuration  
+Error: Rocket failed to launch due to failing fairings:  
+```
+check table correctly named by your code.
