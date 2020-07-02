@@ -1,6 +1,6 @@
 use serde_json::value::Value;
 use crate::line::{bot, utils, messages, events};
-use crate::models::*;
+use crate::models::line::*;
 use super::get_secret_data;
 
 pub fn construct(

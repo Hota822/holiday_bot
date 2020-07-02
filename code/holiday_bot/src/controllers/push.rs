@@ -1,7 +1,7 @@
 use serde_json::value::Value;
 // use crate::line::{bot, utils, messages, events};
 use crate::line::{bot, messages};
-use crate::models::*;
+use crate::models::line::*;
 use crate::public_holidays as ph;
 // use crate::utils::holiday;
 use crate::utils::holiday as date;
