@@ -26,6 +26,21 @@ pub fn cron(signature: Secret, body: Body) -> &'static str {
     "Push success!"
 }
 
+#[post("/reset_db", format = "application/json", data = "<data>")]
+pub fn reset_db(signature: Secret, data: String) -> &'static str{
+    controllers::holiday::reset_db();
+    "Database successfully reset"
+}
+
+
+
+
+
+
+
+
+// functions for test, experiment-----------------------------------------------
+
 #[post("/test", format = "application/json", data = "<body>")]
 pub fn test(header: HeaderTest, body: BodyTest)  {
     println!("Request header is:");
@@ -54,7 +69,6 @@ pub fn create_page_view(
             println!("Error inserting row: {:?}", err);
             "Error inserting row into database".into()
         })?;
-    
     Ok(format!("Inserted {} row(s).", inserted_rows))
 }
 
